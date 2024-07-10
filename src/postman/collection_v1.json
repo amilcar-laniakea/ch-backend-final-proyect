@@ -1,0 +1,273 @@
+{
+  "info": {
+    "_postman_id": "27c2dafa-a63e-4677-bfec-89bbc3ad2cac",
+    "name": "CoderHouse Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9537182"
+  },
+  "item": [
+    {
+      "name": "products",
+      "item": [
+        {
+          "name": "Get Products (All) => /api/products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/products",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Products (id) => /api/products/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/products/10",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products", "10"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Product => /api/products",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"{{$randomProductName}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"category\": \"{{$randomProductName}}\",\r\n    \"code\": {{$randomInt}},\r\n    \"price\": {{$randomInt}},\r\n    \"stock\": {{$randomInt}}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/products",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Product => /api/products/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"{{$randomProductName}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"category\": \"{{$randomProductName}}\",\r\n    \"code\": {{$randomInt}},\r\n    \"price\": {{$randomInt}},\r\n    \"stock\": {{$randomInt}}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/products/5",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products", "5"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Products => /api/products/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/products/5",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "products", "5"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "files",
+      "item": [
+        {
+          "name": "Upload File Image => /api/upload",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "fileName",
+                  "type": "file",
+                  "src": "/C:/Users/MyxDyX/OneDrive/Documents/Images/Capture-ia-tools.PNG"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:8080/api/upload",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "upload"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "carts",
+      "item": [
+        {
+          "name": "Get Carts (All) => /api/carts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/carts",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "carts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cart (id) => /api/cart/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/cart/1",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "cart", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate New Cart => /api/cart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/cart",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "cart"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AddProductCart => /api/cart/:cid/product/:pid",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"quantity\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/cart/1/product/3",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "cart", "1", "product", "3"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteCartProduct => /api/cart/:cid/product/:pid",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/cart/1/product/2",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "cart", "1", "product", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteCart => /api/cart/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/cart/1",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "cart", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reduceCartQuantity => /api/cart/:cid/product/:pid",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"quantity\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/cart/1/product/3",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "cart", "1", "product", "3"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Main Static Home",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8080",
+          "host": ["localhost"],
+          "port": "8080"
+        }
+      },
+      "response": []
+    }
+  ]
+}

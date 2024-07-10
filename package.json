@@ -1,0 +1,16 @@
+{
+  "name": "coderhouse_ecommerce",
+  "version": "0.0.1",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node --watch src/app.js"
+  },
+  "keywords": [],
+  "author": "Amilcar Barahona",
+  "license": "ISC",
+  "description": "coderhouse_ecommerce",
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
