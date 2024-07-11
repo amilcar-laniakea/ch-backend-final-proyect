@@ -134,8 +134,6 @@ class ProductManager {
     let limitParam = parseInt(limit);
 
     this.products = await this.#manageFile();
-
-    console.log('this.products', this.products);
     
     let limitProducts = [...this.products];
 

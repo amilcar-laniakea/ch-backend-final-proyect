@@ -7,7 +7,7 @@ const CartManager = require("../services/CartManager.js");
 const Cart = new CartManager();
 const Product = new ProductManager();
 
-router.get("/carts", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const carts = await Cart.getCarts(req.query.limit);
 
@@ -20,7 +20,7 @@ router.get("/carts", async (req, res) => {
   }
 });
 
-router.get("/cart/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const cart = await Cart.getCartById(Number(req.params.id));
 
@@ -33,18 +33,17 @@ router.get("/cart/:id", async (req, res) => {
   }
 });
 
-router.post("/cart", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const result = await Cart.generateCart();
 
     res.status(201).send({ status: res.statusCode, ...result });
   } catch (error) {
-    console.log('error', error);
     res.status(500).send(error);
   }
 });
 
-router.post("/cart/:cid/product/:pid", async (req, res) => {
+router.post("/:cid/product/:pid", async (req, res) => {
   try{
     const productProcess = await Product.checkAvailableProductStock(Number(req.params.pid), req.body.quantity);
 
@@ -64,7 +63,7 @@ router.post("/cart/:cid/product/:pid", async (req, res) => {
   }
 });
 
-router.delete("/cart/:cid/product/:pid", async (req, res) => {
+router.delete("/:cid/product/:pid", async (req, res) => {
   try {
     const result = await Cart.deleteCartProduct(Number(req.params.cid), Number(req.params.pid));
 
@@ -78,7 +77,7 @@ router.delete("/cart/:cid/product/:pid", async (req, res) => {
   }
 });
 
-router.delete("/cart/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const result = await Cart.deleteCart(Number(req.params.id));
 
@@ -92,7 +91,7 @@ router.delete("/cart/:id", async (req, res) => {
   }
 });
 
-router.put("/cart/:cid/product/:pid", async (req, res) => {
+router.put("/:cid/product/:pid", async (req, res) => {
   try {
     const cartProcess = await Cart.reduceCartProductQuantity(Number(req.params.cid), Number(req.params.pid), req.body.quantity);
 

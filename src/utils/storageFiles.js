@@ -43,7 +43,6 @@ const handleFileUpload = (req, res, next) => {
   const uploadSingle = upload.single("fileName");
 
   uploadSingle(req, res, (error) => {
-    console.log('req', req.file);
     if(!req.file) {
       return res.status(400).json({ status: res.statusCode, error: `fileName field is required or name is invalid.` });
     }

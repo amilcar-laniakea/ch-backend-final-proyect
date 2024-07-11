@@ -10,20 +10,19 @@
       "name": "products",
       "item": [
         {
-          "name": "Get Products (All) => /api/products",
+          "name": "Get Products (All) => /api/product",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/products",
+              "raw": "localhost:8080/api/product?limit=2",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "products"],
+              "path": ["api", "product"],
               "query": [
                 {
                   "key": "limit",
-                  "value": "2",
-                  "disabled": true
+                  "value": "2"
                 }
               ]
             }
@@ -31,21 +30,21 @@
           "response": []
         },
         {
-          "name": "Get Products (id) => /api/products/:id",
+          "name": "Get Products (id) => /api/product/:id",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/products/10",
+              "raw": "localhost:8080/api/product/2",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "products", "10"]
+              "path": ["api", "product", "2"]
             }
           },
           "response": []
         },
         {
-          "name": "Add Product => /api/products",
+          "name": "Add Product => /api/product",
           "request": {
             "method": "POST",
             "header": [],
@@ -59,16 +58,16 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/api/products",
+              "raw": "localhost:8080/api/product",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "products"]
+              "path": ["api", "product"]
             }
           },
           "response": []
         },
         {
-          "name": "Edit Product => /api/products/:id",
+          "name": "Edit Product => /api/product/:id",
           "request": {
             "method": "PUT",
             "header": [],
@@ -82,24 +81,24 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/api/products/5",
+              "raw": "localhost:8080/api/product/5",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "products", "5"]
+              "path": ["api", "product", "5"]
             }
           },
           "response": []
         },
         {
-          "name": "Delete Products => /api/products/:id",
+          "name": "Delete Products => /api/product/:id",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/products/5",
+              "raw": "localhost:8080/api/product/5",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "products", "5"]
+              "path": ["api", "product", "5"]
             }
           },
           "response": []
@@ -120,7 +119,7 @@
                 {
                   "key": "fileName",
                   "type": "file",
-                  "src": "/C:/Users/MyxDyX/OneDrive/Documents/Images/Capture-ia-tools.PNG"
+                  "src": "/C:/Users/MyxDyX/OneDrive/Imágenes/450362136_1172493827408957_3939453517171595717_n.jpg"
                 }
               ]
             },
@@ -139,15 +138,15 @@
       "name": "carts",
       "item": [
         {
-          "name": "Get Carts (All) => /api/carts",
+          "name": "Get Carts (All) => /api/cart",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/carts",
+              "raw": "localhost:8080/api/cart",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "carts"]
+              "path": ["api", "cart"]
             }
           },
           "response": []
@@ -209,10 +208,10 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/cart/1/product/2",
+              "raw": "localhost:8080/api/cart/1/product/3",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "cart", "1", "product", "2"]
+              "path": ["api", "cart", "1", "product", "3"]
             }
           },
           "response": []
@@ -223,10 +222,10 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/cart/1",
+              "raw": "localhost:8080/api/cart/5",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "cart", "1"]
+              "path": ["api", "cart", "5"]
             }
           },
           "response": []
@@ -246,10 +245,10 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/api/cart/1/product/3",
+              "raw": "localhost:8080/api/cart/1/product/4",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "cart", "1", "product", "3"]
+              "path": ["api", "cart", "1", "product", "4"]
             }
           },
           "response": []
