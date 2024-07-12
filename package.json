@@ -1,9 +1,9 @@
 {
   "name": "coderhouse_ecommerce",
   "version": "0.0.2",
-  "main": "src/app.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node --watch src/app.js"
+    "start": "node --watch api/index.js"
   },
   "keywords": [],
   "author": "Amilcar Barahona",

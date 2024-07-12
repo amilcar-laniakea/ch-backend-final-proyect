@@ -7,7 +7,7 @@ const generateDataFile = require("../utils/generateDataFile.js");
 class ProductManager {
   constructor() {
     this.products = [];
-    this.path = "./src/data/";
+    this.path = "./api/data/";
     this.fileName = "products.json";
   }
 
