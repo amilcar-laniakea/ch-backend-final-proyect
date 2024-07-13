@@ -3,8 +3,6 @@ const fs = require("fs");
 const generateDataFile = require("../utils/generateDataFile.js");
 const generateId = require("../utils/generateId.js");
 
-const { validateProductData } = require("../utils/validateProductData.js");
-
 class CartManager {
   constructor() {
     this.cart = [];

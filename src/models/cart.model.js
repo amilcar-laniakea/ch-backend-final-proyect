@@ -1,14 +1,21 @@
 const { Schema, model } = require("mongoose");
 
 const cartSchema = new Schema({
-  status: String,
+  status: {
+    type: Boolean,
+    default: true, 
+  },
   products: [
     {
       id: {
         type: Schema.Types.ObjectId,
         ref: "Product",
+        required: true
       },
-      quantity: Number,
+      quantity: {
+        type: Number,
+        required: true,
+      },
     },
   ],
 });
