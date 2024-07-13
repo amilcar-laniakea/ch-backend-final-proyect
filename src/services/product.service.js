@@ -32,4 +32,10 @@ const getProductById = async (id) => {
   return product;
 };
 
-module.exports = { getAllProducts, getProductById, productCodeErrors };
+const createProduct = async (data) => {
+  const productRequest = new Product(data);
+
+  return await productRequest.save();
+};
+
+module.exports = { getAllProducts, getProductById, createProduct, productCodeErrors };

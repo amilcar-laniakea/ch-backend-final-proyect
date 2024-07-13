@@ -4,7 +4,7 @@ const { validateProductData, validateTypeProductData } = require("../utils/valid
 const generateId = require("../utils/generateId.js");
 const generateDataFile = require("../utils/generateDataFile.js");
 
-const { getAllProducts, getProductById, productCodeErrors } = require("../services/product.service.js");
+const { getAllProducts, getProductById, productCodeErrors, createProduct } = require("../services/product.service.js");
 
 const { statusResponse } = require("../utils/response.js");
 
@@ -17,53 +17,6 @@ class ProductController {
 
   async #manageFile() {
     return await generateDataFile(this.path, this.fileName);
-  }
-
-  async addProduct({
-    title,
-    description,
-    code,
-    price,
-    stock,
-    category,
-    thumbnail = "",
-  }) {
-    this.products = await this.#manageFile();
-
-    let error = "";
-
-    error = validateProductData("title", "string", title);
-    error = error + validateProductData("description", "string", description);
-    error = error + validateProductData("category", "string", category);
-    error = error + validateProductData("code", "number", code);
-    error = error + validateProductData("price", "number", price);
-    error = error + validateProductData("stock", "number", stock);
-
-    if (error && error !== "") return { data: null, message: error };
-
-    const id = generateId(this.products);
-
-    const product = {
-      title,
-      description,
-      code,
-      price,
-      status: true,
-      stock,
-      category,
-      thumbnail,
-      id,
-    };
-
-    this.products.push(product);
-    await fs.promises.writeFile(
-      this.path + this.fileName,
-      JSON.stringify(this.products)
-    );
-    return {
-      data: product,
-      message: `Product with ID ${id}: added successfully`,
-    };
   }
 
   async deleteProduct(id) {
@@ -152,11 +105,11 @@ class ProductController {
       }
 
       return statusResponse(res, limitProducts);
-    } catch(error) {
-      if(error.message === productCodeErrors.NOT_FOUND) {
+    } catch (error) {
+      if (error.message === productCodeErrors.NOT_FOUND) {
         return statusResponse(res, null, error.message, 404, false);
       }
-      
+
       return statusResponse(res, null, error.message, 500, false);
     }
   }
@@ -177,6 +130,40 @@ class ProductController {
 
       return statusResponse(res, null, error.message, 500, false);
     }
+  }
+
+  async createProduct(res,{
+    name,
+    description,
+    price,
+    code,
+    status,
+    stock,
+    category,
+    thumbnail = "",
+  }) {
+    try {
+      const product = {
+        name,
+        description,
+        price,
+        code,
+        status,
+        stock,
+        category,
+        thumbnail,
+      };
+
+      const response = await createProduct(product);
+
+      return statusResponse(res, response, "product added successfully", 201);
+    } catch (error) {
+      if(error.name === "ValidationError") {
+        return statusResponse(res, null, error.message, 400, false);
+      }
+
+      return statusResponse(res, null, error.message, 500, false);
+    } 
   }
 
   async checkAvailableProductStock(id, quantity) {
