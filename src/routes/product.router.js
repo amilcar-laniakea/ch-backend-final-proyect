@@ -1,37 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const ProductManager = require("../services/ProductManager.js");
+const ProductActions = require("../controllers/product.controller.js");
+const { successResponse, statusResponse } = require("../utils/response.js");
 
-const Product = new ProductManager();
+const Product = new ProductActions();
 
-router.get("/", async (req, res) => {
-  try {
-    const products = await Product.getProducts(req.query.limit);
-
-    if (products.data.length === 0) {
-      return res.json({ status: res.statusCode, ...products});
-    }
-
-    res.json({status: res.statusCode, ...products});
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  try {
-    const product = await Product.getProductById(Number(req.params.id));
-
-    if (!product.data) {
-      return res.json({ status: res.statusCode, ...product });  
-    }
-
-    res.json({ status: res.statusCode, ...product });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/", async (req, res) => Product.getProducts(res, req.query.limit));
+router.get("/:id", (req, res) => Product.getProductById(res, String(req.params.id)));
 
 router.post("/", async (req, res) => {
   try {

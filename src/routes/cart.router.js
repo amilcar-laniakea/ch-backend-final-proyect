@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const ProductManager = require("../services/ProductManager.js");
-const CartManager = require("../services/CartManager.js");
+const ProductActions = require("../controllers/product.controller.js");
+const CartActions = require("../controllers/cart.controller.js");
 
-const Cart = new CartManager();
-const Product = new ProductManager();
+const Cart = new CartActions();
+const Product = new ProductActions();
 
 router.get("/", async (req, res) => {
   try {

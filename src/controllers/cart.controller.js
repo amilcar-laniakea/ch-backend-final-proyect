@@ -8,7 +8,7 @@ const { validateProductData } = require("../utils/validateProductData.js");
 class CartManager {
   constructor() {
     this.cart = [];
-    this.path = "./api/data/";
+    this.path = "./src/data/";
     this.fileName = "carts.json";
   }
 
