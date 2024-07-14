@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "main": "src/server.js",
   "scripts": {
-    "start": "node --env-file .env --watch server.js"
+    "start": "node --env-file .env --watch server.js",
+    "vercel/build": "echo hi!"
   },
   "keywords": [],
   "author": "Amilcar Barahona",
