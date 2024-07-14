@@ -1,28 +1,24 @@
-const fs = require("fs");
-
-const generateDataFile = require("../utils/generateDataFile.js");
-
-const { cartSuccessCodes, cartErrorCodes } = require("../constants/cart.constants.js");
 const {
   getAllCarts,
   getCartById,
   createCart,
   deleteCart,
-} = require("../services/cart.service.js"); 
+} = require("../services/cart.service.js");
+const { getProductById } = require("../services/product.service.js");
 const { statusResponse } = require("../utils/response.js");
+const {
+  cartSuccessCodes,
+  cartErrorCodes,
+} = require("../constants/cart.constants.js");
+const { productErrorCodes } = require("../constants/product.constants.js");
+const isValidObjectId = require("../utils/isValidObjectId.js");
 
 
 class CartController {
   constructor() {
     this.cart = [];
-    this.path = "./src/data/";
-    this.fileName = "carts.json";
+    this.product = [];
   }
-
-  async #manageFile() {
-    return await generateDataFile(this.path, this.fileName);
-  }
-
   async getCarts(res, limit) {
     try {
       this.cart = await getAllCarts();
@@ -85,137 +81,107 @@ class CartController {
     }    
   }
 
-  async addCartProduct(cid, pid, quantity) {
-    if (isNaN(cid)) {
-      return { data: null, message: "cart id must be a number" };
+  async addCartProduct(res, cid, pid, quantity, isReduceQuantity = false) {
+    try {
+      if (!isValidObjectId(pid)) {
+        return statusResponse(res, null, productErrorCodes.INVALID_FORMAT, 400, false);
+      }
+
+      const cart = await getCartById(cid);
+      const product = await getProductById(pid);
+
+      if(product.stock < quantity) {
+        return statusResponse(res, null, productErrorCodes.NOT_STOCK, 400, false);
+      }
+      
+      const productIndex = cart.products.findIndex((prod) => prod.id.toString() === pid);
+
+      if(productIndex !== -1) { 
+        if(isReduceQuantity) {
+          if(cart.products[productIndex].quantity <= quantity) {
+            return statusResponse(res, null, cartErrorCodes.NOT_ENOUGH_STOCK, 400, false);
+          }
+          cart.products[productIndex].quantity -= quantity;
+        } else {
+          cart.products[productIndex].quantity += quantity;
+        }
+
+      } 
+
+      if(productIndex === -1 && !isReduceQuantity) {
+        cart.products.push({ id: pid, quantity });
+      }
+      
+      await cart.save();
+
+      const productResponse = {
+        ...product._doc,
+        quantity: cart.products[productIndex].quantity,
+      }
+
+      return statusResponse(
+        res,
+        productResponse,
+        cartSuccessCodes.SUCCESS_ADD_PRODUCT
+      );
+    } catch (error) {
+      if (error.message === cartErrorCodes.INVALID_FORMAT) {
+        return statusResponse(res, null, error.message, 400, false);
+      }
+
+      if (error.message === cartErrorCodes.NOT_FOUND) {
+        return statusResponse(res, null, error.message, 404, false);
+      }
+
+      if(error.message === productErrorCodes.INVALID_FORMAT) {
+        return statusResponse(res, null, error.message, 400, false);
+      }
+
+      if(error.message === productErrorCodes.NOT_FOUND) {
+        return statusResponse(res, null, error.message, 404, false);
+      }
+
+      return statusResponse(res, null, error.message, 500, false);
     }
-
-    this.cart = await this.#manageFile();
-
-    const cartIndex = this.cart.findIndex((cart) => cart.id === cid);
-
-    if (cartIndex === -1) {
-      return {
-        data: null,
-        message: `cart with requested ID ${cid}: not found`,
-      };
-    }
-
-    const productIndex = this.cart[cartIndex].products.findIndex(
-      (prod) => prod.id === pid
-    );
-
-    if (productIndex !== -1) {
-      this.cart[cartIndex].products[productIndex].quantity += quantity;
-    } else {
-      this.cart[cartIndex].products.push({ id: pid, quantity });
-    }
-
-    await fs.promises.writeFile(
-      this.path + this.fileName,
-      JSON.stringify(this.cart)
-    );
-
-    return {
-      data: this.cart[cartIndex].products[productIndex],
-      message: `Product with ID ${pid}: was added to cart with ID ${cid} successfully`,
-    };
   }
 
-  async deleteCartProduct(cid, pid) {
-    if (isNaN(cid)) {
-      return { data: null, message: "cart id must be a number" };
+  async deleteCartProduct(res, cid, pid) {
+    try {
+      if (!isValidObjectId(pid)) {
+        return statusResponse(res, null, productErrorCodes.INVALID_FORMAT, 400, false);
+      }
+
+      const cart = await getCartById(cid);
+      const productIndex = cart.products.findIndex((prod) => prod.id.toString() === pid);
+
+      if(productIndex === -1) {
+        return statusResponse(res, null, cartErrorCodes.NOT_FOUND_PRODUCT, 404, false);
+      }
+
+      cart.products.splice(productIndex, 1);
+
+      await cart.save();
+
+      return statusResponse(res, cart, cartSuccessCodes.SUCCESS_DELETE_PRODUCT);
+    } catch (error) {
+      if (error.message === cartErrorCodes.INVALID_FORMAT) {
+        return statusResponse(res, null, error.message, 400, false);
+      }
+
+      if (error.message === cartErrorCodes.NOT_FOUND) {
+        return statusResponse(res, null, error.message, 404, false);
+      }
+
+      if(error.message === productErrorCodes.INVALID_FORMAT) {
+        return statusResponse(res, null, error.message, 400, false);
+      }
+
+      if(error.message === productErrorCodes.NOT_FOUND) {
+        return statusResponse(res, null, error.message, 404, false);
+      }
+
+      return statusResponse(res, null, error.message, 500, false);
     }
-    if (isNaN(pid)) {
-      return { data: null, message: "product id must be a number" };
-    }
-
-    this.cart = await this.#manageFile();
-
-    const cartIndex = this.cart.findIndex((cart) => cart.id === cid);
-
-    if (cartIndex === -1) {
-      return {
-        data: null,
-        message: `cart with requested ID ${cid}: not found`,
-      };
-    }
-
-    const productIndex = this.cart[cartIndex].products.findIndex(
-      (prod) => prod.id === pid
-    );
-
-    if (productIndex === -1) {
-      return {
-        data: null,
-        message: `product with requested ID ${pid}: not found`,
-      };
-    }
-
-    this.cart[cartIndex].products.splice(productIndex, 1);
-
-    await fs.promises.writeFile(
-      this.path + this.fileName,
-      JSON.stringify(this.cart)
-    );
-
-    return {
-      data: this.cart[cartIndex],
-      message: `Product with requested ID ${pid}: was deleted from cart with ID ${cid} successfully`,
-    };
-  }
-
-  async reduceCartProductQuantity(cid, pid, quantity) {
-    if (isNaN(cid)) {
-      return { data: null, message: "cart id must be a number" };
-    }
-    if (isNaN(pid)) {
-      return { data: null, message: "product id must be a number" };
-    }
-    if (isNaN(quantity)) {
-      return { data: null, message: "quantity must be a number" };
-    }
-
-    this.cart = await this.#manageFile();
-
-    const cartIndex = this.cart.findIndex((cart) => cart.id === cid);
-
-    if (cartIndex === -1) {
-      return {
-        data: null,
-        message: `cart with requested ID ${cid}: not found`,
-      };
-    }
-
-    const productIndex = this.cart[cartIndex].products.findIndex(
-      (prod) => prod.id === pid
-    );
-
-    if (productIndex === -1) {
-      return {
-        data: null,
-        message: `product with requested ID ${pid}: not found`,
-      };
-    }
-
-    if (this.cart[cartIndex].products[productIndex].quantity < quantity) {
-      return {
-        data: null,
-        message: `Product with requested ID ${pid}: quantity can't be less than ${quantity}`,
-      };
-    }
-
-    this.cart[cartIndex].products[productIndex].quantity -= quantity;
-
-    await fs.promises.writeFile(
-      this.path + this.fileName,
-      JSON.stringify(this.cart)
-    );
-
-    return {
-      data: this.cart[cartIndex].products[productIndex],
-      message: `Product with requested ID ${pid}: quantity was reduced by ${quantity} successfully`,
-    };
   }
 }
 

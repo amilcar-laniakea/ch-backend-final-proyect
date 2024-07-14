@@ -6,7 +6,8 @@ const productSuccessCodes = {
 
 const productErrorCodes = {
   INVALID_FORMAT: "invalid product id format",
-  NOT_FOUND: "not found",
+  NOT_FOUND: "product(s) not found",
+  NOT_STOCK: "product out of stock",
   UNEXPECTED_ERROR: "unexpected error",
 };
 
