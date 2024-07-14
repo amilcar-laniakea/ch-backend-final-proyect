@@ -66,7 +66,11 @@ class ProductController {
 
       return statusResponse(res, response, productSuccessCodes.SUCCESS_CREATE, 201);
     } catch (error) {
-      if (error.name === exceptionErrors.VALIDATION_ERROR) {
+      if (
+        error.name === exceptionErrors.VALIDATION_ERROR ||
+        error.message === productErrorCodes.UNEXPECTED_ERROR ||
+        error.errorResponse.code === 11000
+      ) {
         return statusResponse(res, null, error.message, 400, false);
       }
 

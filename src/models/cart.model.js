@@ -18,6 +18,6 @@ const cartSchema = new Schema({
       },
     },
   ],
-});
+}, { timestamps: true });
 
-module.exports = model("Cart", cartSchema);
+module.exports = model("carts", cartSchema);

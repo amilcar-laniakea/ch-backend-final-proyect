@@ -7,6 +7,7 @@ const productSuccessCodes = {
 const productErrorCodes = {
   INVALID_FORMAT: "invalid product id format",
   NOT_FOUND: "not found",
+  UNEXPECTED_ERROR: "unexpected error",
 };
 
 module.exports = { productSuccessCodes, productErrorCodes };

@@ -16,6 +16,8 @@ const productSchema = new Schema({
   code: {
     type: Number,
     index: true,
+    required: true,
+    unique: true,
   },
   status: {
     type: Boolean,
@@ -33,6 +35,6 @@ const productSchema = new Schema({
     type: String,
     default: "",
   },
-});
+}, { timestamps: true });
 
-module.exports = model("Product", productSchema);
+module.exports = model("products", productSchema);

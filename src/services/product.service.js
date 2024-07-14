@@ -30,8 +30,13 @@ const getProductById = async (id) => {
 
 const createProduct = async (data) => {
   const productRequest = new Product(data);
+  const product = await productRequest.save();
 
-  return await productRequest.save();
+  if (!product) {
+    throw new Error(productErrorCodes.UNEXPECTED_ERROR);
+  }
+
+  return product;
 };
 
 const updateProduct = async (id, data) => {

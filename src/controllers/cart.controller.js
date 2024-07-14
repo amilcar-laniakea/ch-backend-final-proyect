@@ -3,7 +3,7 @@ const fs = require("fs");
 const generateDataFile = require("../utils/generateDataFile.js");
 const generateId = require("../utils/generateId.js");
 
-class CartManager {
+class CartController {
   constructor() {
     this.cart = [];
     this.path = "./src/data/";
@@ -166,4 +166,4 @@ class CartManager {
   }
 }
 
-module.exports = CartManager;
+module.exports = CartController;
