@@ -1,7 +1,11 @@
 const fs = require("fs");
 
 const generateDataFile = require("../utils/generateDataFile.js");
-const generateId = require("../utils/generateId.js");
+
+const { cartSuccessCodes, cartErrorCodes } = require("../constants/cart.constants.js");
+const { getAllCarts, getCartById, createCart } = require("../services/cart.service.js"); 
+const { statusResponse } = require("../utils/response.js");
+
 
 class CartController {
   constructor() {
@@ -14,50 +18,48 @@ class CartController {
     return await generateDataFile(this.path, this.fileName);
   }
 
-  async generateCart() {
-    this.cart = await this.#manageFile();
+  async getCarts(res, limit) {
+    try {
+      this.cart = await getAllCarts();
 
-    const cart = {
-      id: generateId(this.cart),
-      products: [],
-    };
-    this.cart.push(cart);
+      let limitProducts = [...this.cart];
 
-    await fs.promises.writeFile(this.path + this.fileName, JSON.stringify(this.cart));
+      if (!isNaN(parseInt(limit)) && limitParam > 0) {
+        limitProducts = this.cart.slice(0, limitParam);
+      }
 
-    return {data: cart, message: `Cart with ID ${cart.id}: added successfully`}
+      return statusResponse(res, limitProducts, cartSuccessCodes.SUCCESS_GET);
+    } catch (error) {
+      return statusResponse(res, null, error.message, 500, false);
+    }
   }
 
-  async getCarts(limit) {
-    let limitParam = parseInt(limit);
+  async getCartById(res, id) {
+    try {
+      this.cart = await getCartById(id);
 
-    this.cart = await this.#manageFile();
+      return statusResponse(res, this.cart);
+    } catch (error) {
+      if(error.message === cartErrorCodes.INVALID_FORMAT) {
+        return statusResponse(res, null, error.message, 400, false);
+      }
 
-    let limitProducts = [...this.cart];
+      if(error.message === cartErrorCodes.NOT_FOUND) {
+        return statusResponse(res, null, error.message, 404, false);
+      }
 
-    if (!isNaN(limitParam) && limitParam > 0) {
-      limitProducts = this.cart.slice(0, limitParam);
+      return statusResponse(res, null, error.message, 500, false);
     }
-
-    return {
-      data: limitProducts,
-      message: limitProducts.length === 0 ? "No carts available" : null,
-    };
   }
 
-  async getCartById(id) {
-    this.cart = await this.#manageFile();
-    const product = this.cart.find((p) => p.id === id);
+  async createCart(res) {
+    try {
+      this.cart = await createCart();
 
-    if (isNaN(id)) {
-      return { data: null, message: "cart id must be a number" };
+      return statusResponse(res, this.cart, cartSuccessCodes.SUCCESS_CREATE);
+    } catch (error) {
+      return statusResponse(res, null, error.message, 500, false);
     }
-
-    if (!product) {
-      return { data: null, message: `Cart with requested ID ${id}: not found` };
-    }
-
-    return { data: product, message: null };
   }
 
   async addCartProduct(cid, pid, quantity) {
@@ -70,20 +72,31 @@ class CartController {
     const cartIndex = this.cart.findIndex((cart) => cart.id === cid);
 
     if (cartIndex === -1) {
-      return { data: null, message: `cart with requested ID ${cid}: not found` };
+      return {
+        data: null,
+        message: `cart with requested ID ${cid}: not found`,
+      };
     }
 
-    const productIndex = this.cart[cartIndex].products.findIndex((prod) => prod.id === pid);
+    const productIndex = this.cart[cartIndex].products.findIndex(
+      (prod) => prod.id === pid
+    );
 
     if (productIndex !== -1) {
       this.cart[cartIndex].products[productIndex].quantity += quantity;
-    } else {  
+    } else {
       this.cart[cartIndex].products.push({ id: pid, quantity });
     }
 
-    await fs.promises.writeFile(this.path + this.fileName, JSON.stringify(this.cart));   
+    await fs.promises.writeFile(
+      this.path + this.fileName,
+      JSON.stringify(this.cart)
+    );
 
-    return {  data: this.cart[cartIndex].products[productIndex], message: `Product with ID ${pid}: was added to cart with ID ${cid} successfully` };
+    return {
+      data: this.cart[cartIndex].products[productIndex],
+      message: `Product with ID ${pid}: was added to cart with ID ${cid} successfully`,
+    };
   }
 
   async deleteCartProduct(cid, pid) {
@@ -99,20 +112,34 @@ class CartController {
     const cartIndex = this.cart.findIndex((cart) => cart.id === cid);
 
     if (cartIndex === -1) {
-      return { data: null, message: `cart with requested ID ${cid}: not found` };
+      return {
+        data: null,
+        message: `cart with requested ID ${cid}: not found`,
+      };
     }
 
-    const productIndex = this.cart[cartIndex].products.findIndex((prod) => prod.id === pid);
+    const productIndex = this.cart[cartIndex].products.findIndex(
+      (prod) => prod.id === pid
+    );
 
     if (productIndex === -1) {
-      return { data: null, message: `product with requested ID ${pid}: not found` };
+      return {
+        data: null,
+        message: `product with requested ID ${pid}: not found`,
+      };
     }
 
     this.cart[cartIndex].products.splice(productIndex, 1);
 
-    await fs.promises.writeFile(this.path + this.fileName, JSON.stringify(this.cart));
+    await fs.promises.writeFile(
+      this.path + this.fileName,
+      JSON.stringify(this.cart)
+    );
 
-    return { data: this.cart[cartIndex], message: `Product with requested ID ${pid}: was deleted from cart with ID ${cid} successfully` };
+    return {
+      data: this.cart[cartIndex],
+      message: `Product with requested ID ${pid}: was deleted from cart with ID ${cid} successfully`,
+    };
   }
 
   async deleteCart(id) {
@@ -122,11 +149,17 @@ class CartController {
 
     this.cart = await this.#manageFile();
     const index = this.cart.findIndex((p) => p.id === id);
-    if (index === -1) return {data: null, message: 'Cart not found'}
+    if (index === -1) return { data: null, message: "Cart not found" };
 
     const cartDeleted = this.cart.splice(index, 1);
-    await fs.promises.writeFile(this.path + this.fileName, JSON.stringify(this.cart));
-    return { data: cartDeleted, message: `Cart with ID ${id}: was deleted successfully` };
+    await fs.promises.writeFile(
+      this.path + this.fileName,
+      JSON.stringify(this.cart)
+    );
+    return {
+      data: cartDeleted,
+      message: `Cart with ID ${id}: was deleted successfully`,
+    };
   }
 
   async reduceCartProductQuantity(cid, pid, quantity) {
@@ -145,24 +178,41 @@ class CartController {
     const cartIndex = this.cart.findIndex((cart) => cart.id === cid);
 
     if (cartIndex === -1) {
-      return { data: null, message: `cart with requested ID ${cid}: not found` };
+      return {
+        data: null,
+        message: `cart with requested ID ${cid}: not found`,
+      };
     }
 
-    const productIndex = this.cart[cartIndex].products.findIndex((prod) => prod.id === pid);
+    const productIndex = this.cart[cartIndex].products.findIndex(
+      (prod) => prod.id === pid
+    );
 
     if (productIndex === -1) {
-      return { data: null, message: `product with requested ID ${pid}: not found` };
+      return {
+        data: null,
+        message: `product with requested ID ${pid}: not found`,
+      };
     }
 
     if (this.cart[cartIndex].products[productIndex].quantity < quantity) {
-      return { data: null, message: `Product with requested ID ${pid}: quantity can't be less than ${quantity}` };
+      return {
+        data: null,
+        message: `Product with requested ID ${pid}: quantity can't be less than ${quantity}`,
+      };
     }
 
     this.cart[cartIndex].products[productIndex].quantity -= quantity;
 
-    await fs.promises.writeFile(this.path + this.fileName, JSON.stringify(this.cart));
+    await fs.promises.writeFile(
+      this.path + this.fileName,
+      JSON.stringify(this.cart)
+    );
 
-    return { data: this.cart[cartIndex].products[productIndex], message: `Product with requested ID ${pid}: quantity was reduced by ${quantity} successfully` };
+    return {
+      data: this.cart[cartIndex].products[productIndex],
+      message: `Product with requested ID ${pid}: quantity was reduced by ${quantity} successfully`,
+    };
   }
 }
 

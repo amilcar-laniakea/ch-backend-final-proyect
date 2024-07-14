@@ -1,7 +1,5 @@
 const Product = require("../models/product.model");
-
 const isValidObjectId = require("../utils/isValidObjectId.js");
-
 const { productErrorCodes } = require("../constants/product.constants.js")
 
 const getAllProducts = async () => {

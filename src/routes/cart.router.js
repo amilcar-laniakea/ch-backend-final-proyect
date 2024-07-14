@@ -7,41 +7,9 @@ const CartActions = require("../controllers/cart.controller.js");
 const Cart = new CartActions();
 const Product = new ProductActions();
 
-router.get("/", async (req, res) => {
-  try {
-    const carts = await Cart.getCarts(req.query.limit);
-
-    if (carts.data.length === 0) {
-      return res.json({ status: res.statusCode, ...carts });
-    }
-    res.json({ status: res.statusCode, ...carts });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  try {
-    const cart = await Cart.getCartById(Number(req.params.id));
-
-    if (!cart.data) {
-      return res.json({ status: res.statusCode, ...cart });
-    }
-    res.json({ status: res.statusCode, ...cart });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-router.post("/", async (req, res) => {
-  try {
-    const result = await Cart.generateCart();
-
-    res.status(201).send({ status: res.statusCode, ...result });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/", async (req, res) => Cart.getCarts(res, req.query.limit));
+router.get("/:id", async (req, res) => Cart.getCartById(res, req.params.id));
+router.post("/", (_, res) => Cart.createCart(res));
 
 router.post("/:cid/product/:pid", async (req, res) => {
   try{
