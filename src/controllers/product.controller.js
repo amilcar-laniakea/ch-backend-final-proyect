@@ -108,7 +108,7 @@ class ProductController {
         return statusResponse(res, null, error.message, 404, false);
       }
 
-      if (error.name === exceptionErrors.CAST_ERROR) {
+      if (error.name === exceptionErrors.CAST_ERROR || error.errorResponse.code === 11000) {
         return statusResponse(res, null, error.message, 400, false);
       }
 

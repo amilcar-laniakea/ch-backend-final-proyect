@@ -15,11 +15,11 @@ const getAllProducts = async () => {
 };
 
 const getProductById = async (id) => {
-  if (!isValidObjectId(id)) {
+  if (!isValidObjectId(id) && isNaN(Number(id))) {
     throw new Error(productErrorCodes.INVALID_FORMAT);
   }
 
-  const product = await Product.findById(id);
+  const product = await ( !isNaN(id) ? Product.findOne({ code: id}) : Product.findById(id));
 
   if (!product) {
     throw new Error(productErrorCodes.NOT_FOUND);
@@ -50,7 +50,11 @@ const updateProduct = async (id, data) => {
 }
 
 const deleteProduct = async (id) => {
-  const product = await Product.findByIdAndDelete(id);
+  if (!isValidObjectId(id) && isNaN(Number(id))) {
+    throw new Error(productErrorCodes.INVALID_FORMAT);
+  }
+  
+  const product = await ( !isNaN(id) ? Product.deleteOne({ code: id }) : Product.findByIdAndDelete(id));
 
   if (!product) {
     throw new Error(productErrorCodes.NOT_FOUND);
