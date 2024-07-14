@@ -1,5 +1,6 @@
 const cartSuccessCodes = {
   SUCCESS_CREATE: "success create cart",
+  SUCCESS_DELETE: "success delete cart",
 };
 
 const cartErrorCodes = {

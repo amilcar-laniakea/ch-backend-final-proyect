@@ -3,7 +3,12 @@ const fs = require("fs");
 const generateDataFile = require("../utils/generateDataFile.js");
 
 const { cartSuccessCodes, cartErrorCodes } = require("../constants/cart.constants.js");
-const { getAllCarts, getCartById, createCart } = require("../services/cart.service.js"); 
+const {
+  getAllCarts,
+  getCartById,
+  createCart,
+  deleteCart,
+} = require("../services/cart.service.js"); 
 const { statusResponse } = require("../utils/response.js");
 
 
@@ -40,11 +45,11 @@ class CartController {
 
       return statusResponse(res, this.cart);
     } catch (error) {
-      if(error.message === cartErrorCodes.INVALID_FORMAT) {
+      if (error.message === cartErrorCodes.INVALID_FORMAT) {
         return statusResponse(res, null, error.message, 400, false);
       }
 
-      if(error.message === cartErrorCodes.NOT_FOUND) {
+      if (error.message === cartErrorCodes.NOT_FOUND) {
         return statusResponse(res, null, error.message, 404, false);
       }
 
@@ -60,6 +65,24 @@ class CartController {
     } catch (error) {
       return statusResponse(res, null, error.message, 500, false);
     }
+  }
+
+  async deleteCart(res, id) {
+    try {
+      this.cart = await deleteCart(id);
+
+      return statusResponse(res, this.cart, cartSuccessCodes.SUCCESS_DELETE);
+    } catch (error) {
+      if (error.message === cartErrorCodes.INVALID_FORMAT) {
+        return statusResponse(res, null, error.message, 400, false);
+      }
+
+      if (error.message === cartErrorCodes.NOT_FOUND) {
+        return statusResponse(res, null, error.message, 404, false);
+      }
+
+      return statusResponse(res, null, error.message, 500, false);
+    }    
   }
 
   async addCartProduct(cid, pid, quantity) {
@@ -139,26 +162,6 @@ class CartController {
     return {
       data: this.cart[cartIndex],
       message: `Product with requested ID ${pid}: was deleted from cart with ID ${cid} successfully`,
-    };
-  }
-
-  async deleteCart(id) {
-    if (isNaN(id)) {
-      return { data: null, message: "cart must be a number" };
-    }
-
-    this.cart = await this.#manageFile();
-    const index = this.cart.findIndex((p) => p.id === id);
-    if (index === -1) return { data: null, message: "Cart not found" };
-
-    const cartDeleted = this.cart.splice(index, 1);
-    await fs.promises.writeFile(
-      this.path + this.fileName,
-      JSON.stringify(this.cart)
-    );
-    return {
-      data: cartDeleted,
-      message: `Cart with ID ${id}: was deleted successfully`,
     };
   }
 

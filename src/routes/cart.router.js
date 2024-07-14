@@ -45,19 +45,7 @@ router.delete("/:cid/product/:pid", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  try {
-    const result = await Cart.deleteCart(Number(req.params.id));
-
-    if (!result.data) {
-      return res.status(400).send({ status: res.statusCode, ...result });
-    }
-
-    res.status(200).send({ status: res.statusCode, ...result });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.delete("/:id", (req, res) => Cart.deleteCart(res, req.params.id));
 
 router.put("/:cid/product/:pid", async (req, res) => {
   try {

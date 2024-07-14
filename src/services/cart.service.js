@@ -37,4 +37,18 @@ const createCart = async () => {
   return cartSaved;
 }; 
 
-module.exports = { getAllCarts, getCartById, createCart };
+const deleteCart = async (id) => {
+  if (!isValidObjectId(id)) {
+    throw new Error(cartErrorCodes.INVALID_FORMAT);
+  }
+
+  const cart = await Cart.findByIdAndDelete(id);
+
+  if (!cart) {
+    throw new Error(cartErrorCodes.NOT_FOUND);
+  }
+
+  return cart;
+};
+
+module.exports = { getAllCarts, getCartById, createCart, deleteCart };
