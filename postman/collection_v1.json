@@ -30,15 +30,15 @@
           "response": []
         },
         {
-          "name": "Get Products (id) => /api/product/:id",
+          "name": "Get Products (id/code) => /api/product/:id/code",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/product/2",
+              "raw": "localhost:8080/api/product/118",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "product", "2"]
+              "path": ["api", "product", "118"]
             }
           },
           "response": []
@@ -50,7 +50,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\": \"{{$randomProductName}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"category\": \"{{$randomProductName}}\",\r\n    \"code\": {{$randomInt}},\r\n    \"price\": {{$randomInt}},\r\n    \"stock\": {{$randomInt}}\r\n}",
+              "raw": "{\r\n    \"name\": \"{{$randomProductName}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"category\": \"{{$randomProductName}}\",\r\n    \"code\": {{$randomInt}},\r\n    \"price\": {{$randomInt}},\r\n    \"stock\": {{$randomInt}}\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -73,7 +73,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\": \"{{$randomProductName}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"category\": \"{{$randomProductName}}\",\r\n    \"code\": {{$randomInt}},\r\n    \"price\": {{$randomInt}},\r\n    \"stock\": {{$randomInt}}\r\n}",
+              "raw": "{\r\n    \"name\": \"{{$randomProductName}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"price\": {{$randomInt}},\r\n    \"code\": {{$randomInt}},\r\n    \"status\": {{$randomBoolean}},\r\n    \"stock\": {{$randomInt}},\r\n    \"category\": \"{{$randomProductName}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -81,24 +81,24 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/api/product/5",
+              "raw": "localhost:8080/api/product/669314734768a91fe840babd",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "product", "5"]
+              "path": ["api", "product", "669314734768a91fe840babd"]
             }
           },
           "response": []
         },
         {
-          "name": "Delete Products => /api/product/:id",
+          "name": "Delete Products => /api/product/:id/code",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/product/5",
+              "raw": "localhost:8080/api/product/66932617b04352892ecd1ef5",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "product", "5"]
+              "path": ["api", "product", "66932617b04352892ecd1ef5"]
             }
           },
           "response": []
@@ -157,10 +157,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/cart/1",
+              "raw": "localhost:8080/api/cart/669331eab88b686ec97261e4",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "cart", "1"]
+              "path": ["api", "cart", "669331eab88b686ec97261e4"]
             }
           },
           "response": []
@@ -186,7 +186,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"quantity\": 3\r\n}",
+              "raw": "{\r\n    \"quantity\": 1,\r\n    \"isReduceQuantity\": false\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -194,10 +194,16 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/api/cart/1/product/3",
+              "raw": "localhost:8080/api/cart/669331eab88b686ec97261e4/product/66932618b04352892ecd1ef7",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "cart", "1", "product", "3"]
+              "path": [
+                "api",
+                "cart",
+                "669331eab88b686ec97261e4",
+                "product",
+                "66932618b04352892ecd1ef7"
+              ]
             }
           },
           "response": []
@@ -208,10 +214,16 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/cart/1/product/3",
+              "raw": "localhost:8080/api/cart/669331eab88b686ec97261e4/product/66932618b04352892ecd1ef7",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "cart", "1", "product", "3"]
+              "path": [
+                "api",
+                "cart",
+                "669331eab88b686ec97261e4",
+                "product",
+                "66932618b04352892ecd1ef7"
+              ]
             }
           },
           "response": []
@@ -222,10 +234,10 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "localhost:8080/api/cart/5",
+              "raw": "localhost:8080/api/cart/669331dcb88b686ec97261e2",
               "host": ["localhost"],
               "port": "8080",
-              "path": ["api", "cart", "5"]
+              "path": ["api", "cart", "669331dcb88b686ec97261e2"]
             }
           },
           "response": []

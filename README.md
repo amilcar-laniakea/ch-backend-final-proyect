@@ -26,7 +26,50 @@ Primera entrega del proyecto final que tiene su foco en realizar un CRUD de prod
 
 ## Configuración
 ### Variables de entorno
+En el archivo `.env.example` se encuentran las variables necesarias para poder usar la conexión correcta con mongodb:
+
 `PORT`: El puerto se encuentra definido por default en el archivo principal del proyecto (app.js): 8080
+`MONGO_DB_URI`: Dirección de la base de datos de mongodb
+`DATABASE_NAME`: Nombre de la base de datos a conectar
+
+### Colecciones de MongoDB
+
+Las colecciones que usa este proyecto en mongo DB son las siguientes:
+#### products
+La estructura se encuentra en la carpeta `src/models/product.model.js`, aquí un json de respuesta de ejemplo:
+nombre de la colección creada en la base de datos => `products`
+```sh
+   {
+      "_id": "66932618b04352892ecd1ef7",
+      "name": "Gorgeous Metal Keyboard",
+      "description": "Principal",
+      "price": 760,
+      "code": 118,
+      "status": true,
+      "stock": 139,
+      "category": "Awesome Rubber Mouse",
+      "thumbnail": "",
+      "createdAt": "2024-07-14T01:12:56.203Z",
+      "updatedAt": "2024-07-14T01:12:56.203Z",
+      "__v": 0
+    }
+```
+#### carts
+La estructura se encuentra en la carpeta `src/models/cart.model.js`, aquí un json de respuesta de ejemplo:
+nombre de la colección creada en la base de datos => `carts`
+
+`NOTA:` EL ATRIBUTO `id` PRESENTE REPRESENTA EL ID DEL PRODUCTO EN LA COLECCIÓN DE `products`, EL `_id` representa el id generado por mongodb de forma automática.
+
+```sh
+   {
+      {
+         "id": "66932618b04352892ecd1ef7",
+         "quantity": 6,
+         "_id": "66942fbd53693c1dbd5e3aa2"
+      }
+    }
+```
+
 ### Package.json
 Contiene las siguientes librerías necesarias para los requerimientos necesarios del trabajo final:
 
@@ -39,13 +82,6 @@ Contiene las siguientes librerías necesarias para los requerimientos necesarios
       npm run start
    ```
 Esto iniciara la aplicación en la dirección: [http://localhost:8080](http://localhost:8080/)
-
-### Carpeta de recursos estaticos:
-AL utilizar cada uno de los endpoints de la aplicación, se generan la carpeta y ruta correspondiente a los archivos necesarios:  
-`data/carts.json` o `data/products.json`  
-Si al invocar un endpoint la carpeta no existe y tampoco el archivo, por ejemplo, ver todos los productos, esta generara la carpeta data y el archivo correspondiente de forma automática, de lo contrario, la aplicación procederá a leerlo y mostrara el contenido del mismo en el resultado del servicio.
-
-La carpeta de igual forma sirve como bucket de imágenes para el servicio de subir las mismas que se explicaran en los endpoints routes.
 
 ### Endpoints de la API
 Los endpoints se dividen en tres archivos de rutas, las cuales manejar sus respectivos métodos de consulta:  
@@ -72,7 +108,7 @@ Los servicios de la APP responderán  la siguiente estructura:
 >Ejemplo de respuesta en excepción o error: 
    ```sh
       {
-         "status": 200,
+         "status": 400, # puede ser 400, para un error proveniente de parametros incorrectos, 404 para recursos no encontrados y 500 para excepciones
          "data": null,
          "message": "Product with requested ID 15: not found"
       }
@@ -81,9 +117,9 @@ Los servicios de la APP responderán  la siguiente estructura:
 Nótese los atributos comunes a la respuesta: `status` indica el código de la respuesta solicitada, `data` para la información generada por la respuesta, en caso de ser una excepción su valor sera `null` y acompañada de un `message` que detalla la información de la respuesta en caso de ser necesaria, de los contrario, su valor sera `null`.
 
 #### Rutas de productos:  
-**GET**  `/api/products`: Obtiene la lista de productos. Puede enviarse como parámetro opcional `limit` para limitar la cantidad en los resultados.  
-**GET**  `/api/products/:id`: Obtiene un producto con el id requerido por parámetro en ruta.  
-**POST** `/api/products`: Crea un producto con un id autogenerado, requiere los siguientes atributos enviados por el body (ejemplo de variables usadas en Postman para generar valores aleatorios de atributos):  
+**GET**  `/api/product`: Obtiene la lista de productos. Puede enviarse como parámetro opcional `limit` para limitar la cantidad en los resultados.  
+**GET**  `/api/product/:id`: Obtiene un producto con el id (o código) del producto requerido por parámetro en ruta.  
+**POST** `/api/product`: Crea un producto con un id autogenerado por mongodb, requiere los siguientes atributos enviados por el body (ejemplo de variables usadas en Postman para generar valores aleatorios de atributos):  
    ```sh
       {
          "title": "{{$randomProductName}}",
@@ -94,7 +130,7 @@ Nótese los atributos comunes a la respuesta: `status` indica el código de la r
          "stock": {{$randomInt}}
       }
    ```
-**PUT** `/api/products/:id`: actualiza el producto requerido, pueden enviarse los mismos parametros que en el ejemplo de crear un producto, sin embargo, son de manera opcional, y pueden editarse uno por individual por request o todos a la vez, ejemplos:
+**PUT** `/api/product/:id`: actualiza el producto requerido, pueden enviarse los mismos parametros que en el ejemplo de crear un producto, sin embargo, son de manera opcional, y pueden editarse uno por individual por request o todos a la vez, ejemplos:
    ```sh
       {
          "title": "{{$randomProductName}}",
@@ -106,28 +142,26 @@ Nótese los atributos comunes a la respuesta: `status` indica el código de la r
          "description": "{{$randomJobDescriptor}}",
       }
    ```
-**DELETE** `/api/products/:id`: borra el producto requerido
+**DELETE** `/api/product/:id`: borra el producto requerido
 
 #### Rutas de Carrito de compras:
-**GET**  `/api/carts`: Obtiene la lista de carrito de compras creados.  
+**GET**  `/api/cart`: Obtiene la lista de carrito de compras creados.  
 **GET**  `/api/cart/:id`: Obtiene un carrito de compras con el id requerido por parámetro en ruta.  
 **POST** `/api/cart`: Genera un carrito de compras con un id secuencial único y lo incluye en la lita de carritos de compras, este es necesario para usar los servicios de  crear y gestionar los productos del mismo.  
-**POST** `/api/cart/:cid/product/:pid`: Este servicio tiene como principal funcion agregar productos a un carrito de compras elegido, el parámetro `:cid` indica el carrito objetivo a ser gestionado, como segundo parámetro `:pid` que representa el id del producto a agregar, este se usa junto con el parámetro  por body `quantity` para verificar si el producto existe en la lista de productos generada y almacenada en `data/products.json` cuenta con la existencia de ese producto y tiene un stock suficiente para ser agregado.
+**POST** `/api/cart/:cid/product/:pid`: Este servicio tiene como principal funcion agregar productos a un carrito de compras elegido, el parámetro `:cid` indica el carrito objetivo a ser gestionado, como segundo parámetro `:pid` que representa el id del producto a agregar, este se usa junto con el parámetro  por body `quantity` para verificar si el producto existe en la lista de productos en mongodb.
+
+Como segunda funcion tiene la posibilidad de reducir la cantidad del producto elegida y pasada por el body con el parámetro opcional `isReduceQuantity`, en donde si este se encuentra en true reducirá la cantidad del producto del mismo en el carrito de compras, siempre y cuando la cantidad sera menor a la actualmente almacenada, de lo contrario, arrojara un 400 indicando la falta de stock.
 
 El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Postman): 
    ```sh
       {
-         "quantity": 3
+         "quantity": 3,
+         "isReduceQuantity": true # opcional, por defecto es false
       }
    ```
 **DELETE** `/api/cart/:cid/product/:pid`: Elimina un producto deseado por medio del id del carrito `:cid` y el id del producto `:pid`  
 **DELETE** `/api/cart/:id`: Elimina un carrito de la lista de carrito de compras por medio del parámetro `:id`  
-**PUT** `/api/cart/:cid/product/:pid`: Reduce la cantidad deseada de un producto ya agregado al carrito de compras por medio del id del producto `:pid`, el id del carrito de compras `:pid`, ademas debe enviarse por parámetro en el body la cantidad deseada a disminuir:  
-   ```sh
-      {
-         "quantity": 3
-      }
-   ```
+
 #### Rutas subir imágenes:
 **POST** `/api/upload`: servicio para subir imágenes que se almacenan en la ruta `/data/` el cual incluye como titulo el timestamp de la imagen concatenado con su nombre original.  
 
@@ -137,17 +171,23 @@ En la ruta `/src/postman` se encuentra la colección de postman necesaria a impo
 ## Estructura del proyecto
 ```
 proyecto/
+├── postman/
+│   └── collection_v1.json (colección que puede importarse a la aplicación de POSTMAN)
+├── public/
 ├── src/
-│   ├── data/ (carpeta generada automáticamente al usar los servicios) 
-│   ├── postman/
-│   ├── public/
+│   ├── config/
+│   ├── constants/
+│   ├── controllers/
+│   ├── models/
 │   ├── routes/
 |   ├── services/
 |   ├── utils/
 │   └── app.js
 ├── .gitignore
+├── .env.example
 ├── package.json
 ├── package-lock.json
+├── server.js
 └── README.md
 ```
 ## Desarrollo
