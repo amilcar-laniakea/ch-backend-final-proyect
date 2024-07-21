@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { getIo } = require("../websockets/server.js");
 
 const ProductManager = require("../services/ProductManager.js");
 
@@ -40,9 +41,15 @@ router.post("/", async (req, res) => {
     if(!result.data) {
       return res.status(400).send({ status: res.statusCode, ...result });
     }
+    
+    const io = getIo();
+
+    io.emit("productAdded", result.data);
 
     res.status(201).send({ status: res.statusCode, ...result });
   } catch (error) {
+
+    console.log('error', error);
     res.status(500).send(error);
   }
 });
@@ -54,6 +61,10 @@ router.put("/:id", async (req, res) => {
     if(!result.data) {
       return res.status(400).send({ status: res.statusCode, ...result });
     }
+
+    const io = getIo();
+
+    io.emit("productUpdated", result.data);
 
     res.status(200).send({ status: res.statusCode, ...result });
   } catch (error) {
@@ -68,9 +79,14 @@ router.delete("/:id", async (req, res) => {
     if(!result.data) {
       return res.status(400).send({ status: res.statusCode, ...result });
     }
+
+    const io = getIo();
+
+    io.emit("productDeleted", result.data[0]);
     
     res.status(200).send(result);
   } catch (error) {
+    console.log('error', error);
     res.status(500).send(error);
   }
 });
