@@ -33,5 +33,19 @@ router.get("/real-time-products", async (req, res) => {
   res.render("realTimeProducts", { response });
 });
 
+router.get("/real-time-products-v2", async (req, res) => {
+  let response = { error: false, products: [] };
+
+  try {
+    const products = await Product.getProducts(req?.query?.limit);
+
+    response = { ...response, products: products.data.reverse() };
+  } catch (error) {
+    response = { ...response, error: true };
+  }
+
+  res.render("realTimeProductsv2", { response });
+});
+
 
 module.exports = router;

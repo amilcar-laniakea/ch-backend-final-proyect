@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { getIo } = require("../websockets/server.js");
+const { socketDataResponse } = require("../utils/socketDataResponse.js");
 
 const ProductManager = require("../services/ProductManager.js");
 
@@ -35,59 +36,61 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  let dataResponse;
   try {
     const result = await Product.addProduct(req.body);
 
     if(!result.data) {
       return res.status(400).send({ status: res.statusCode, ...result });
     }
+
+    dataResponse = result.data;
     
-    const io = getIo();
-
-    io.emit("productAdded", result.data);
-
     res.status(201).send({ status: res.statusCode, ...result });
   } catch (error) {
-
-    console.log('error', error);
     res.status(500).send(error);
+  } finally {
+    socketDataResponse("productAdded", dataResponse, Product);
   }
 });
 
 router.put("/:id", async (req, res) => {
+  let dataResponse;
+
   try {
     const result = await Product.updateProduct(Number(req.params.id), req.body);
 
-    if(!result.data) {
+    if (!result.data) {
       return res.status(400).send({ status: res.statusCode, ...result });
     }
 
-    const io = getIo();
-
-    io.emit("productUpdated", result.data);
+    dataResponse = result.data;
 
     res.status(200).send({ status: res.statusCode, ...result });
   } catch (error) {
     res.status(500).send(error);
+  } finally {
+    socketDataResponse("productUpdated", dataResponse, Product);
   }
 });
 
 router.delete("/:id", async (req, res) => {
+  let dataResponse;
+
   try {
     const result = await Product.deleteProduct(Number(req.params.id));
-    
-    if(!result.data) {
+
+    if (!result.data) {
       return res.status(400).send({ status: res.statusCode, ...result });
     }
 
-    const io = getIo();
+    dataResponse = result.data[0];
 
-    io.emit("productDeleted", result.data[0]);
-    
     res.status(200).send(result);
   } catch (error) {
-    console.log('error', error);
     res.status(500).send(error);
+  } finally {
+    socketDataResponse("productDeleted", dataResponse, Product);
   }
 });
 
