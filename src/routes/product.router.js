@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const { getIo } = require("../websockets/server.js");
 const { socketDataResponse } = require("../utils/socketDataResponse.js");
 
 const ProductManager = require("../services/ProductManager.js");

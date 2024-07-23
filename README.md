@@ -23,6 +23,7 @@ Primera entrega del proyecto final que tiene su foco en realizar un CRUD de prod
 1. Clonar el repositorio:
    ```sh
    git clone https://github.com/amilcar-laniakea/ch-backend-final-proyect.git
+   ```
 
 ## Configuración
 ### Variables de entorno
@@ -32,6 +33,10 @@ Contiene las siguientes librerías necesarias para los requerimientos necesarios
 
 `express`: En su version 4.19.2.  
 `multer`: En su version 1.4.5.
+`express-handlebars`: En su version 7.1.3
+`socket.io`: En su version 4.7.5
+
+**Importante:** las versiones descritas con anterioridad fueron o son las usadas al momento de hacer el desarrollo del proyecto.
 
 ## Uso
 ### Iniciar Aplicación
@@ -80,10 +85,16 @@ Los servicios de la APP responderán  la siguiente estructura:
 
 Nótese los atributos comunes a la respuesta: `status` indica el código de la respuesta solicitada, `data` para la información generada por la respuesta, en caso de ser una excepción su valor sera `null` y acompañada de un `message` que detalla la información de la respuesta en caso de ser necesaria, de los contrario, su valor sera `null`.
 
+> [!NOTE]  hola
+
+<mark>hola</mark>
+
+[^1]: My footnote.
+
 #### Rutas de productos:  
-**GET**  `/api/products`: Obtiene la lista de productos. Puede enviarse como parámetro opcional `limit` para limitar la cantidad en los resultados.  
-**GET**  `/api/products/:id`: Obtiene un producto con el id requerido por parámetro en ruta.  
-**POST** `/api/products`: Crea un producto con un id autogenerado, requiere los siguientes atributos enviados por el body (ejemplo de variables usadas en Postman para generar valores aleatorios de atributos):  
+**GET**  `/api/product`: Obtiene la lista de productos. Puede enviarse como parámetro opcional `limit` para limitar la cantidad en los resultados.  
+**GET**  `/api/product/:id`: Obtiene un producto con el id requerido por parámetro en ruta.  
+**POST** `/api/product`: Crea un producto con un id autogenerado, requiere los siguientes atributos enviados por el body (ejemplo de variables usadas en Postman para generar valores aleatorios de atributos):  
    ```sh
       {
          "title": "{{$randomProductName}}",
@@ -94,7 +105,7 @@ Nótese los atributos comunes a la respuesta: `status` indica el código de la r
          "stock": {{$randomInt}}
       }
    ```
-**PUT** `/api/products/:id`: actualiza el producto requerido, pueden enviarse los mismos parametros que en el ejemplo de crear un producto, sin embargo, son de manera opcional, y pueden editarse uno por individual por request o todos a la vez, ejemplos:
+**PUT** `/api/product/:id`: actualiza el producto requerido, pueden enviarse los mismos parametros que en el ejemplo de crear un producto, sin embargo, son de manera opcional, y pueden editarse uno por individual por request o todos a la vez, ejemplos:
    ```sh
       {
          "title": "{{$randomProductName}}",
@@ -106,12 +117,12 @@ Nótese los atributos comunes a la respuesta: `status` indica el código de la r
          "description": "{{$randomJobDescriptor}}",
       }
    ```
-**DELETE** `/api/products/:id`: borra el producto requerido
+**DELETE** `/api/product/:id`: borra el producto requerido
 
 #### Rutas de Carrito de compras:
-**GET**  `/api/carts`: Obtiene la lista de carrito de compras creados.  
+**GET**  `/api/cart`: Obtiene la lista de carrito de compras creados.  
 **GET**  `/api/cart/:id`: Obtiene un carrito de compras con el id requerido por parámetro en ruta.  
-**POST** `/api/cart`: Genera un carrito de compras con un id secuencial único y lo incluye en la lita de carritos de compras, este es necesario para usar los servicios de  crear y gestionar los productos del mismo.  
+**POST** `/api/cart`: Genera un carrito de compras con un id secuencial único y lo incluye en la lista de carritos de compras, este es necesario para usar los servicios de  crear y gestionar los productos del mismo.  
 **POST** `/api/cart/:cid/product/:pid`: Este servicio tiene como principal funcion agregar productos a un carrito de compras elegido, el parámetro `:cid` indica el carrito objetivo a ser gestionado, como segundo parámetro `:pid` que representa el id del producto a agregar, este se usa junto con el parámetro  por body `quantity` para verificar si el producto existe en la lista de productos generada y almacenada en `data/products.json` cuenta con la existencia de ese producto y tiene un stock suficiente para ser agregado.
 
 El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Postman): 
@@ -129,7 +140,20 @@ El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Po
       }
    ```
 #### Rutas subir imágenes:
-**POST** `/api/upload`: servicio para subir imágenes que se almacenan en la ruta `/data/` el cual incluye como titulo el timestamp de la imagen concatenado con su nombre original.  
+**POST** `/api/upload`: servicio para subir imágenes que se almacenan en la ruta `/data/` el cual incluye como titulo el timestamp de la imagen concatenado con su nombre original.
+
+#### Rutas estáticas:
+
+Son las rutas usadas para renderizar del lado del servidor contenido que pueda ser visualizado y manipulado por el cliente, estas vistas permiten mostrar los productos que son devueltos anteriormente por el endpoint `/api/products` de forma gráfica.
+
+1. **Ruta Estática**: `/home`: Esta muestra los productos almacenados en el archivo temporal `data/products.json` y los renderiza estaticamente en la vista de mayor `ID` a menor `ID`.
+<p align="center">
+   <image src="external_resourses/images/home.jpg" alt="Descripción de la imagen">
+</p>
+
+La estructura de información mostrada es la misma que la devuelta por el endpoint **GET** `api/product`
+
+2. **Ruta Estática**: `/home`:
 
 ## Postman Collection
 En la ruta `/src/postman` se encuentra la colección de postman necesaria a importar en la aplicación de `Postman` y usar los recursos de la APP, el nombre del archivo es `collection_v1.json`

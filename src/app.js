@@ -7,11 +7,7 @@ const { webSocketServer } = require("./websockets/server.js");
 const app = express();
 const PORT = 8080;
 const server = http.createServer(app);
-
-const hbs = create({
-  extname: "hbs",
-  partialsDir: path.join(__dirname, "views", "partials"),
-});
+const hbs = create({ extname: "hbs", partialsDir: path.join(__dirname, "views", "partials")});
 
 webSocketServer(server);
 
