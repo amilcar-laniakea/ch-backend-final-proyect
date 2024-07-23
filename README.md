@@ -85,6 +85,9 @@ Los servicios de la APP responderán  la siguiente estructura:
 
 Nótese los atributos comunes a la respuesta: `status` indica el código de la respuesta solicitada, `data` para la información generada por la respuesta, en caso de ser una excepción su valor sera `null` y acompañada de un `message` que detalla la información de la respuesta en caso de ser necesaria, de los contrario, su valor sera `null`.
 
+> [!NOTE]
+> This is a note
+
 > [!NOTE]  hola
 
 <mark>hola</mark>
