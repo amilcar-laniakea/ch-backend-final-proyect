@@ -140,6 +140,8 @@ El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Po
     markdown color font styles
 </span>
 
+<p><green>hola verde</green></p>
+
 > [!IMPORTANT]
 > Estas rutas son para demostración de renderizado de contenido del lado der servidor para ser servido por frontend
 
