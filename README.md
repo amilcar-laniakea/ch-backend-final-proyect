@@ -85,15 +85,6 @@ Los servicios de la APP responderán  la siguiente estructura:
 
 Nótese los atributos comunes a la respuesta: `status` indica el código de la respuesta solicitada, `data` para la información generada por la respuesta, en caso de ser una excepción su valor sera `null` y acompañada de un `message` que detalla la información de la respuesta en caso de ser necesaria, de los contrario, su valor sera `null`.
 
-> [!NOTE]
-> This is a note
-
-> [!NOTE]  hola
-
-<mark>hola</mark>
-
-[^1]: My footnote.
-
 #### Rutas de productos:  
 **GET**  `/api/product`: Obtiene la lista de productos. Puede enviarse como parámetro opcional `limit` para limitar la cantidad en los resultados.  
 **GET**  `/api/product/:id`: Obtiene un producto con el id requerido por parámetro en ruta.  
@@ -146,6 +137,9 @@ El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Po
 **POST** `/api/upload`: servicio para subir imágenes que se almacenan en la ruta `/data/` el cual incluye como titulo el timestamp de la imagen concatenado con su nombre original.
 
 #### Rutas estáticas:
+
+> [!IMPORTANT]
+> Estas rutas son para demostración de renderizado de contenido del lado der servidor para ser servido por frontend
 
 Son las rutas usadas para renderizar del lado del servidor contenido que pueda ser visualizado y manipulado por el cliente, estas vistas permiten mostrar los productos que son devueltos anteriormente por el endpoint `/api/products` de forma gráfica.
 
