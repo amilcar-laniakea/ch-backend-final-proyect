@@ -136,25 +136,26 @@ El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Po
 #### Rutas subir imágenes:
 **POST** `/api/upload`: servicio para subir imágenes que se almacenan en la ruta `/data/` el cual incluye como titulo el timestamp de la imagen concatenado con su nombre original.
 
-<span style="color:green;font-weight:700;font-size:20px">
-    markdown color font styles
-</span>
-
-<p><green>hola verde</green></p>
-
 > [!IMPORTANT]
 > Estas rutas son para demostración de renderizado de contenido del lado der servidor para ser servido por frontend
 
 Son las rutas usadas para renderizar del lado del servidor contenido que pueda ser visualizado y manipulado por el cliente, estas vistas permiten mostrar los productos que son devueltos anteriormente por el endpoint `/api/products` de forma gráfica.
 
-1. **Ruta Estática**: `/home`: Esta muestra los productos almacenados en el archivo temporal `data/products.json` y los renderiza estaticamente en la vista de mayor `ID` a menor `ID`.
+1. $${\color{lightgreen}Ruta \space Estática:}$$ `/views/home`: Esta muestra los productos almacenados en el archivo temporal `data/products.json` y los renderiza estaticamente en la vista de mayor `ID` a menor `ID`.
+
 <p align="center">
    <image src="external_resourses/images/home.jpg" alt="Descripción de la imagen">
 </p>
 
 La estructura de información mostrada es la misma que la devuelta por el endpoint **GET** `api/product`
 
-2. **Ruta Estática**: `/home`:
+2. $${\color{lightgreen}Ruta \space Estática:}$$ `/views/real-time-products`:
+
+Esta vista muestra contenido de los productos de igual manera que la vista anterior, pero con diferencias importantes:
+
+- Los
+- Las
+
 
 ## Postman Collection
 En la ruta `/src/postman` se encuentra la colección de postman necesaria a importar en la aplicación de `Postman` y usar los recursos de la APP, el nombre del archivo es `collection_v1.json`
