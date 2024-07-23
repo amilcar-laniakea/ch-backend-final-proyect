@@ -138,6 +138,8 @@ El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Po
 
 #### <span style="color:blue font-size: 1em">Rutas estáticas: </span>
 
+<span style="color:blue font-size: 1em">Rutas estáticas: </span>
+
 #### <span style="color:blue">Rutas estáticas: </span>
 
 > [!IMPORTANT]
