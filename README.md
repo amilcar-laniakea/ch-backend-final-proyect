@@ -141,7 +141,11 @@ El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Po
 
 Son las rutas usadas para renderizar del lado del servidor contenido que pueda ser visualizado y manipulado por el cliente, estas vistas permiten mostrar los productos que son devueltos anteriormente por el endpoint `/api/products` de forma gráfica.
 
-1. $${\color{lightgreen}Ruta \space Estática:}$$ `/views/home`: Esta muestra los productos almacenados en el archivo temporal `data/products.json` y los renderiza estaticamente en la vista de mayor `ID` a menor `ID`.
+$${\color{green}Rutas \space Estáticas:}$$ 
+
+$${\color{lightgreen}/views/home:}$$
+
+Esta muestra los productos almacenados en el archivo temporal `data/products.json` y los renderiza estaticamente en la vista de mayor `ID` a menor `ID`.
 
 <p align="center">
    <image src="external_resourses/images/home.jpg" alt="Descripción de la imagen">
