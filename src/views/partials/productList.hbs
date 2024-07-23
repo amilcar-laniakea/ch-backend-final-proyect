@@ -1,0 +1,42 @@
+<div>
+  <h1 style="text-align: center; margin: 10px 0">Lista de Productos:</h1>
+  <h4 style="text-align: center; margin: 5px 0">Cantidad actual: <span id="productQuantity">{{response.products.length}}</span></h4>
+  {{#unless error}}
+
+    {{#if actionsButtons}}
+      <div style="width: 100%; text-align: center; padding-top: 15px; padding-bottom: 15px;">
+        <button onclick="addProductModal()" style="border: 0; border-radius: 4px; background-color: #7066e0; color: #ffffff; font-size: 1em; padding: .625em 1.1em; cursor: pointer">Agregar Producto</button>
+      </div>
+    {{/if}}
+
+    <div id="productList">
+      {{#if response.products.length}}
+        {{#each response.products}}
+          <ul style="border: 1px solid #a0a0a0; padding-top: 15px; padding-bottom: 15px; border-radius: 8px; position: relative">
+            <li style="margin: 0px">ID: <strong>{{id}}</strong></li>
+            <li style="margin: 0px">Título: <strong>{{title}}</strong></li>
+            <li style="margin: 0px">Descripción: {{description}}</li>
+            <li style="margin: 0px">Código: {{code}}</li>
+            <li style="margin: 0px">Precio: <strong>${{price}}</strong></li>
+            <li style="margin: 0px">Status: {{#if status}}<strong>Activo</strong>{{else}}Inactivo{{/if}}</li>
+            <li style="margin: 0px">Stock: {{stock}}</li>
+            <li style="margin: 0px">Categoría: <strong>{{category}}</strong></li>
+
+            {{#if ../actionsButtons}}
+              <button onclick="deleteProductModal({{id}})" style="border: 0; border-radius: 4px; background-color: #e06666; color: #ffffff; font-size: 1em; padding: .625em 1.1em; cursor: pointer; position: absolute; top: 0; bottom: 0; right: 0; margin: 70px 30px">Eliminar</button>
+            {{/if}}
+
+          </ul>
+        {{/each}}
+      {{else}}
+        <p>No hay productos disponibles...</p>
+      {{/if}}
+    </div>
+  {{else}}
+    <p>Ha ocurrido un error en mostrar la lista...</p>
+  {{/unless}}
+</div>
+
+<script src="/js/productList.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
