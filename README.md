@@ -145,13 +145,13 @@ El parámetro `quantity` debe ser enviado de la siguiente manera (ejemplo por Po
 #### Rutas subir imágenes:
 **POST** `/api/upload`: servicio para subir imágenes que se almacenan en la ruta `/data/` el cual incluye como titulo el timestamp de la imagen concatenado con su nombre original.
 
+#### Rutas estáticas:
+
 > [!IMPORTANT]
 > Estas rutas son para demostración de renderizado de contenido del lado der servidor para ser servido por frontend
 
 > [!NOTE]
 > Cada vista presenta en su mecánica un archivo JS vinculado a su lógica ubicado en la ruta `/public/js`
-
-#### Rutas estáticas:
 
 Son las rutas usadas para renderizar del lado del servidor contenido que pueda ser visualizado y manipulado por el cliente, estas vistas permiten mostrar los productos que son devueltos anteriormente por el endpoint `/api/products` de forma gráfica.
 
