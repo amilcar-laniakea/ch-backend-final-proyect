@@ -49,7 +49,9 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   } finally {
-    socketDataResponse("productAdded", dataResponse, Product);
+    if (dataResponse) {
+      socketDataResponse("productAdded", dataResponse, Product);
+    } 
   }
 });
 
@@ -69,7 +71,9 @@ router.put("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   } finally {
-    socketDataResponse("productUpdated", dataResponse, Product);
+    if (dataResponse) {
+      socketDataResponse("productUpdated", dataResponse, Product);
+    }
   }
 });
 
@@ -89,7 +93,9 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   } finally {
-    socketDataResponse("productDeleted", dataResponse, Product);
+    if (dataResponse) {
+      socketDataResponse("productDeleted", dataResponse, Product);
+    }
   }
 });
 
